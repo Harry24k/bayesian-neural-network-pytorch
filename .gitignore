@@ -1,1 +1,7 @@
 _*/
+torchbnn.egg-info/
+dist/
+.gitattributes
+MENIFEST.in
+setup.py
+setup.cfg
