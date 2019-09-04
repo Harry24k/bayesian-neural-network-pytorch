@@ -1,0 +1,11 @@
+build/*
+_*/
+dist/*
+torchbnn.egg-info/*
+demos/data/MNIST/*
+demos/data/cifar*
+*/.*
+MENIFEST.in
+setup.cfg
+setup.py
+.gitattributes
