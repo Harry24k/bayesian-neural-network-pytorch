@@ -1,7 +1,8 @@
-_*/
-torchbnn.egg-info/
-dist/
+build/*
+torchbnn.egg-info/*
+dist/*
 .gitattributes
 MENIFEST.in
 setup.py
 setup.cfg
+_*/*
