@@ -28,6 +28,6 @@ import torchbnn
 ## Update Records
 
 ### Version 0.1
-* modules : BayesLinear, BayesConv2d, BayesBatchNorm2d
-* utils : convert_model(nonbayes_to_bayes, bayes_to_nonbayes)
-* functional : bayesian_kl_loss
+* **modules** : BayesLinear, BayesConv2d, BayesBatchNorm2d
+* **utils** : convert_model(nonbayes_to_bayes, bayes_to_nonbayes)
+* **functional** : bayesian_kl_loss
