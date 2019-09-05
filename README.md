@@ -2,7 +2,7 @@
 
 This is a lightweight repository of bayesian neural network for Pytorch.
 There are bayesian versions of pytorch layers and some utils.
-The aim is to help construct bayesian neural network intuitively.
+To help construct bayesian neural network intuitively, all codes are modified based on the original pytorch codes.
 
 ## Usage
 
