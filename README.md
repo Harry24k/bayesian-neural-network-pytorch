@@ -20,7 +20,7 @@ The aim is to help construct bayesian neural network intuitively.
 import torchbnn
 ```
 
-### Thanks to
+## Thanks to
 
 * @kumar-shridhar [github:PyTorch-BayesianCNN](https://github.com/kumar-shridhar/PyTorch-BayesianCNN)
 * @xuanqing94 [github:BayesianDefense](https://github.com/xuanqing94/BayesianDefense)
