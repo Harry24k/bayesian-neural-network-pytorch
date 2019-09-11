@@ -18,17 +18,21 @@ def _kl_loss(mu_0, log_sigma_0, mu_1, log_sigma_1) :
     (torch.exp(log_sigma_0)**2 + (mu_0-mu_1)**2)/(2*math.exp(log_sigma_1)**2) - 0.5
     return kl.sum()
 
-def bayesian_kl_loss(model, norm=True, last_layer_only=False) :
+def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
     """
     An method for calculating KL divergence of whole layers in the model.
 
+
     Arguments:
-        model (nn.Module): a model to be calculated.
-        norm (Bool): True return mean of each layer's KL divergence, 
-                     False return sum of each layer's KL divergence.  
-        last_layer_only (Bool): True for return the last layer's KL divergence.    
+        model (nn.Module): a model to be calculated for KL-divergence.
+        reduction (string, optional): Specifies the reduction to apply to the output:
+            ``'mean'``: the sum of the output will be divided by the number of
+            elements in the output,
+            ``'sum'``: the output will be summed.
+        last_layer_only (Bool): True for return only the last layer's KL divergence.    
         
     """
+    
     kl_sum = 0
     n = 0
 
@@ -52,13 +56,15 @@ def bayesian_kl_loss(model, norm=True, last_layer_only=False) :
                 kl = _kl_loss(m.bias_mu, m.bias_log_sigma, m.prior_mu, m.prior_log_sigma)
                 kl_sum += kl                
                 n += len(m.bias_mu.view(-1))
-
-    if norm :
-        kl_sum = kl_sum/n
-
-    if last_layer_only :
-        kl_sum = kl
         
-    return kl_sum
-
+    if last_layer_only :
+        return kl
+    
+    if reduction == 'mean' :
+        return kl_sum/n
+    elif reduction == 'sum' :
+        return kl_sum
+    else :
+        raise ValueError(reduction + " is not valid")
+        
 

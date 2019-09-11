@@ -1,3 +1,5 @@
+import math
+
 import torch
 from torch.nn import Module, Parameter
 import torch.nn.init as init
@@ -8,7 +10,7 @@ Applies Bayesian Batch Normalization over a 2D or 3D input
 
 Arguments:
     prior_mu (Float): mean of prior normal distribution.
-    prior_log_sigma (Float): log(sigma of prior normal distribution).
+    prior_sigma (Float): sigma of prior normal distribution.
 
 .. note:: other arguments are following batchnorm of pytorch 1.2.0.
 https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
@@ -17,12 +19,12 @@ https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
 
 class _BayesBatchNorm(Module):
     _version = 2
-    __constants__ = ['prior_mu', 'prior_log_sigma', 'track_running_stats', 
+    __constants__ = ['prior_mu', 'prior_sigma', 'track_running_stats', 
                      'momentum', 'eps', 'weight', 'bias',
                      'running_mean', 'running_var', 'num_batches_tracked',
                      'num_features', 'affine']
 
-    def __init__(self, prior_mu, prior_log_sigma, num_features, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True):
+    def __init__(self, prior_mu, prior_sigma, num_features, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True):
         super(_BayesBatchNorm, self).__init__()
         self.num_features = num_features
         self.eps = eps
@@ -31,7 +33,8 @@ class _BayesBatchNorm(Module):
         self.track_running_stats = track_running_stats
         if self.affine:
             self.prior_mu = prior_mu
-            self.prior_log_sigma = prior_log_sigma
+            self.prior_sigma = prior_sigma
+            self.prior_log_sigma = math.log(prior_sigma)
             self.weight_mu = Parameter(torch.Tensor(num_features))
             self.weight_log_sigma = Parameter(torch.Tensor(num_features))
             self.bias_mu = Parameter(torch.Tensor(num_features))
@@ -60,10 +63,17 @@ class _BayesBatchNorm(Module):
     def reset_parameters(self):
         self.reset_running_stats()
         if self.affine:
-            init.ones_(self.weight_mu)
+            # Initialization method of Adv-BNN.
+            self.weight_mu.data.uniform_()
             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
-            init.zeros_(self.bias_mu)
+            self.bias_mu.data.zero_()
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
+            
+            # Initilization method of the original torch nn.batchnorm.
+#             init.ones_(self.weight_mu)
+#             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
+#             init.zeros_(self.bias_mu)
+#             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
 
     def _check_input_dim(self, input):
         raise NotImplementedError
@@ -97,7 +107,7 @@ class _BayesBatchNorm(Module):
             exponential_average_factor, self.eps)
 
     def extra_repr(self):
-        return '{prior_mu}, {prior_log_sigma}, {num_features}, ' \
+        return '{prior_mu}, {prior_sigma}, {num_features}, ' \
                 'eps={eps}, momentum={momentum}, affine={affine}, ' \
                 'track_running_stats={track_running_stats}'.format(**self.__dict__)
 

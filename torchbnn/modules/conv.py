@@ -12,7 +12,7 @@ Applies Bayesian Convolution
 
 Arguments:
     prior_mu (Float): mean of prior normal distribution.
-    prior_log_sigma (Float): log(sigma of prior normal distribution).
+    prior_sigma (Float): sigma of prior normal distribution.
 
 .. note:: other arguments are following conv of pytorch 1.2.0.
 https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/conv.py
@@ -21,11 +21,11 @@ https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/conv.py
 
 class _BayesConvNd(Module):
 
-    __constants__ = ['prior_mu', 'prior_log_sigma', 'stride', 'padding', 'dilation',
+    __constants__ = ['prior_mu', 'prior_sigma', 'stride', 'padding', 'dilation',
                      'groups', 'bias', 'padding_mode', 'output_padding', 'in_channels',
                      'out_channels', 'kernel_size']
 
-    def __init__(self, prior_mu, prior_log_sigma, in_channels, out_channels, kernel_size, stride,
+    def __init__(self, prior_mu, prior_sigma, in_channels, out_channels, kernel_size, stride,
                  padding, dilation, transposed, output_padding,
                  groups, bias, padding_mode):
         super(_BayesConvNd, self).__init__()
@@ -45,7 +45,8 @@ class _BayesConvNd(Module):
         self.padding_mode = padding_mode
         
         self.prior_mu = prior_mu
-        self.prior_log_sigma = prior_log_sigma
+        self.prior_sigma = prior_sigma
+        self.prior_log_sigma = math.log(prior_sigma)
         self.bias = bias
         
         
@@ -70,18 +71,29 @@ class _BayesConvNd(Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        init.kaiming_uniform_(self.weight_mu, a=math.sqrt(5))
+        # Initialization method of Adv-BNN.
+        n = self.in_channels
+        n *= self.kernel_size[0] ** 2
+        stdv = 1.0 / math.sqrt(n)
+        self.weight_mu.data.uniform_(-stdv, stdv)
         self.weight_log_sigma.data.fill_(self.prior_log_sigma)
-        
         if self.bias :
-            fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_mu)
-            bound = 1 / math.sqrt(fan_in)
-            init.uniform_(self.bias_mu, -bound, bound)
-            
+            self.bias_mu.data.uniform_(-stdv, stdv)
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
+            
+        # Initialization method of the original torch nn.conv.
+#         init.kaiming_uniform_(self.weight_mu, a=math.sqrt(5))
+#         self.weight_log_sigma.data.fill_(self.prior_log_sigma)
+        
+#         if self.bias :
+#             fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_mu)
+#             bound = 1 / math.sqrt(fan_in)
+#             init.uniform_(self.bias_mu, -bound, bound)
+           
+#             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
 
     def extra_repr(self):
-        s = ('{prior_mu}, {prior_log_sigma}'
+        s = ('{prior_mu}, {prior_sigma}'
              ', {in_channels}, {out_channels}, kernel_size={kernel_size}'
              ', stride={stride}')
         if self.padding != (0,) * len(self.padding):
