@@ -32,9 +32,9 @@ def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
         last_layer_only (Bool): True for return only the last layer's KL divergence.    
         
     """
-    
-    kl = torch.Tensor([0])
-    kl_sum = torch.Tensor([0])
+    device = torch.device("cuda" if next(model.parameters()).is_cuda else "cpu")
+    kl = torch.Tensor([0]).to(device)
+    kl_sum = torch.Tensor([0]).to(device)
     n = 0
 
     for m in model.modules() :

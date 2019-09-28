@@ -43,3 +43,7 @@ import torchbnn
 ### Version 0.3
 * **bayesian_kl_loss/BKLLoss returns tensor.Tensor([0]) as default**
 	* In the previous version, bayesian_kl_loss/BKLLoss returns 0 of int type if there is no Bayesian layers. However, considering all torch loss returns tensor and .item() is used to make them to int type, they are changed to return tensor.Tensor([0]) if there is no Bayesian layers.
+
+### Version 0.4
+* **bayesian_kl_loss/BKLLoss is modified**
+	* In some cases, the device problem(cuda/cpu) has occurred. Thus, losses are initialized with tensor.Tensor([0]) on the device on which the model is.
