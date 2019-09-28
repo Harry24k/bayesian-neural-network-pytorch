@@ -33,7 +33,8 @@ def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
         
     """
     
-    kl_sum = 0
+    kl = torch.Tensor([0])
+    kl_sum = torch.Tensor([0])
     n = 0
 
     for m in model.modules() :

@@ -39,3 +39,7 @@ import torchbnn
 * **Modules(BayesLinear, BayesConv2d, BayesBatchNorm2d)** : Base initialization method is changed to the method of Adv-BNN from the original torch method.
 * **functional** : **bayesian_kl_loss** is changed similar to ones in **torch.functional**
 * **loss** : **BKLLoss** is added based on bayesian_kl_loss similar to ones in **torch.loss**
+
+### Version 0.3
+* **bayesian_kl_loss/BKLLoss returns tensor.Tensor([0]) as default**
+	* In the previous version, bayesian_kl_loss/BKLLoss returns 0 of int type if there is no Bayesian layers. However, considering all torch loss returns tensor and .item() is used to make them to int type, they are changed to return tensor.Tensor([0]) if there is no Bayesian layers.
