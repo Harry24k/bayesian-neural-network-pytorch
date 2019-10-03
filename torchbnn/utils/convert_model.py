@@ -1,3 +1,5 @@
+import copy
+
 import torch
 from torch.nn import *
 from ..modules import *
@@ -53,9 +55,14 @@ Arguments:
 
 """
 
-def nonbayes_to_bayes(local_model, prior_mu, prior_sigma):
+def nonbayes_to_bayes(local_model, prior_mu, prior_sigma, inplace=True):
     global model
-    model = local_model
+    
+    if inplace :
+        model = local_model
+    else :
+        model = copy.deepcopy(local_model)
+        
     for name, m in model.named_children() :
         if isinstance(m, Sequential) :
             s = "model."+ name + " = Sequential("
@@ -70,9 +77,14 @@ def nonbayes_to_bayes(local_model, prior_mu, prior_sigma):
             exec(s, globals())
     return model
 
-def bayes_to_nonbayes(local_model):
+def bayes_to_nonbayes(local_model, inplace=True):
     global model
-    model = local_model
+    
+    if inplace :
+        model = local_model
+    else :
+        model = copy.deepcopy(local_model)
+        
     for name, m in model.named_children() :
         if isinstance(m, Sequential) :
             s = "model."+ name + " = Sequential("

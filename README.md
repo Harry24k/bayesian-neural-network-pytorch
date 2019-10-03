@@ -47,3 +47,7 @@ import torchbnn
 ### Version 0.4
 * **bayesian_kl_loss/BKLLoss is modified**
 	* In some cases, the device problem(cuda/cpu) has occurred. Thus, losses are initialized with tensor.Tensor([0]) on the device on which the model is.
+    
+### Version 0.5
+* **nonbayes_to_bayes, bayes_to_nonbayes is modified**
+	* Before this version, they replace the original model. From now, we can handle it with the 'inplace' argument. Set 'inplace=True' for replace the input model and 'inplace=False' for getting a new model. 'inplace=True' is recommended cause it shortens memories and no future problems with deepcopy.
