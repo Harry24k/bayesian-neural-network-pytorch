@@ -47,23 +47,28 @@ class _BayesConvNd(Module):
         self.prior_mu = prior_mu
         self.prior_sigma = prior_sigma
         self.prior_log_sigma = math.log(prior_sigma)
-        self.bias = bias
         
+        self.freeze = False
         
         if transposed:
             self.weight_mu = Parameter(torch.Tensor(
                 in_channels, out_channels // groups, *kernel_size))
             self.weight_log_sigma = Parameter(torch.Tensor(
                 in_channels, out_channels // groups, *kernel_size))
+            self.weight_eps = torch.randn_like(self.weight_log_sigma)
         else:
             self.weight_mu = Parameter(torch.Tensor(
                 out_channels, in_channels // groups, *kernel_size))
             self.weight_log_sigma = Parameter(torch.Tensor(
                 out_channels, in_channels // groups, *kernel_size))
+            self.weight_eps = torch.randn_like(self.weight_log_sigma)
             
+        self.bias = bias
+        
         if bias:
             self.bias_mu = Parameter(torch.Tensor(out_channels))
             self.bias_log_sigma = Parameter(torch.Tensor(out_channels))
+            self.bias_eps = torch.randn_like(self.bias_log_sigma)
         else:
             self.register_parameter('bias_mu', None)
             self.register_parameter('bias_log_sigma', None)
@@ -126,7 +131,9 @@ class BayesConv2d(_BayesConvNd):
     def conv2d_forward(self, input, weight):
         
         if self.bias:
-            bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+            if not self.freeze :
+                self.bias_eps = torch.randn_like(self.bias_log_sigma)    
+            bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             bias = None
             
@@ -140,6 +147,8 @@ class BayesConv2d(_BayesConvNd):
                         self.padding, self.dilation, self.groups)
 
     def forward(self, input):
-        weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+        if not self.freeze :
+            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+        weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
         
         return self.conv2d_forward(input, weight)

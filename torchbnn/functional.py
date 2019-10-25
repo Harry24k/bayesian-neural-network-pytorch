@@ -35,7 +35,7 @@ def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
     device = torch.device("cuda" if next(model.parameters()).is_cuda else "cpu")
     kl = torch.Tensor([0]).to(device)
     kl_sum = torch.Tensor([0]).to(device)
-    n = 0
+    n = torch.Tensor([0]).to(device)
 
     for m in model.modules() :
         if isinstance(m, (BayesLinear, BayesConv2d)):
@@ -57,8 +57,8 @@ def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
                 kl = _kl_loss(m.bias_mu, m.bias_log_sigma, m.prior_mu, m.prior_log_sigma)
                 kl_sum += kl                
                 n += len(m.bias_mu.view(-1))
-        
-    if last_layer_only :
+            
+    if last_layer_only or n == 0 :
         return kl
     
     if reduction == 'mean' :

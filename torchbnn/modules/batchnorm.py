@@ -35,10 +35,16 @@ class _BayesBatchNorm(Module):
             self.prior_mu = prior_mu
             self.prior_sigma = prior_sigma
             self.prior_log_sigma = math.log(prior_sigma)
+            
+            self.freeze = False
+            
             self.weight_mu = Parameter(torch.Tensor(num_features))
             self.weight_log_sigma = Parameter(torch.Tensor(num_features))
+            self.weight_eps = self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            
             self.bias_mu = Parameter(torch.Tensor(num_features))
             self.bias_log_sigma = Parameter(torch.Tensor(num_features))
+            self.bias_eps = torch.randn_like(self.bias_log_sigma)
         else:
             self.register_parameter('weight_mu', None)
             self.register_parameter('weight_log_sigma', None)
@@ -95,8 +101,11 @@ class _BayesBatchNorm(Module):
                     exponential_average_factor = self.momentum
 
         if self.affine :
-            weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
-            bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+            if not self.freeze : 
+                self.weight_eps = torch.randn_like(self.weight_log_sigma)                
+                self.bias_eps = torch.randn_like(self.bias_log_sigma)    
+            weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
+            bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             weight = None
             bias = None
