@@ -5,7 +5,7 @@ from torch.nn import Module, Parameter
 import torch.nn.init as init
 import torch.nn.functional as F
 
-"""
+r"""
 Applies Bayesian Batch Normalization over a 2D or 3D input 
 
 Arguments:
@@ -40,16 +40,18 @@ class _BayesBatchNorm(Module):
             
             self.weight_mu = Parameter(torch.Tensor(num_features))
             self.weight_log_sigma = Parameter(torch.Tensor(num_features))
-            self.weight_eps = self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.register_buffer('weight_eps', torch.Tensor(num_features))
             
             self.bias_mu = Parameter(torch.Tensor(num_features))
             self.bias_log_sigma = Parameter(torch.Tensor(num_features))
-            self.bias_eps = torch.randn_like(self.bias_log_sigma)
+            self.register_buffer('bias_eps', torch.Tensor(num_features))
         else:
             self.register_parameter('weight_mu', None)
             self.register_parameter('weight_log_sigma', None)
+            self.register_buffer('weight_eps', None)
             self.register_parameter('bias_mu', None)
             self.register_parameter('bias_log_sigma', None)
+            self.register_buffer('bias_eps', None)
         if self.track_running_stats:
             self.register_buffer('running_mean', torch.zeros(num_features))
             self.register_buffer('running_var', torch.ones(num_features))
@@ -72,9 +74,10 @@ class _BayesBatchNorm(Module):
             # Initialization method of Adv-BNN.
             self.weight_mu.data.uniform_()
             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
+            self.weight_eps.normal_()
             self.bias_mu.data.zero_()
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
-            
+            self.bias_eps.normal_()
             # Initilization method of the original torch nn.batchnorm.
 #             init.ones_(self.weight_mu)
 #             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
@@ -102,8 +105,8 @@ class _BayesBatchNorm(Module):
 
         if self.affine :
             if not self.freeze : 
-                self.weight_eps = torch.randn_like(self.weight_log_sigma)                
-                self.bias_eps = torch.randn_like(self.bias_log_sigma)    
+                self.weight_eps.normal_()
+                self.bias_eps.normal_()
             weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
             bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :

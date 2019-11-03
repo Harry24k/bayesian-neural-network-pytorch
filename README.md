@@ -56,3 +56,9 @@ import torchbnn
 * **utils/freeze_model.py** :
     * **freeze, unfreeze methods are added** : bayesian modules always returns different outputs even if inputs are same. It is because of their randomized forward propagation. Sometimes, however, we need to freeze this randomized process for analyzing the model deeply. Then you can use this freeze method for changing the bayesian model into non-bayesian model with same parameters.
 * **modules** : For supporting **freeze** method, freeze, weight_eps and bias_eps is added to each modules. If freeze is False (Defalt), weight_eps and bias_eps will be initialized with normal noise at every forward. If freeze is True, weight_eps and bias_eps won't be changed. 
+
+### Version 0.7
+* **modules** : For supporting **freeze** method, weight_eps and bias_eps is changed to buffer with register_buffer method. Thorugh this change, it provides save and load even if bayesian neural network is freezed.
+    * **BayesModule is added** : Bayesian version of torch.nn.Module. Not being used currently.
+* **utils/freeze_model.py** :
+    * **freeze, unfreeze methods are modified** : Previous methods didn't work on single layer network.

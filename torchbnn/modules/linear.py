@@ -5,7 +5,7 @@ from torch.nn import Module, Parameter
 import torch.nn.init as init
 import torch.nn.functional as F
 
-"""
+r"""
 Applies Bayesian Linear
 
 Arguments:
@@ -33,17 +33,17 @@ class BayesLinear(Module):
         
         self.weight_mu = Parameter(torch.Tensor(out_features, in_features))
         self.weight_log_sigma = Parameter(torch.Tensor(out_features, in_features))
-        self.weight_eps = torch.randn_like(self.weight_log_sigma)
+        self.register_buffer('weight_eps', torch.Tensor(out_features, in_features))
                 
         self.bias = bias
-            
         if bias:
             self.bias_mu = Parameter(torch.Tensor(out_features))
             self.bias_log_sigma = Parameter(torch.Tensor(out_features))
-            self.bias_eps = torch.randn_like(self.bias_log_sigma)
+            self.register_buffer('bias_eps', torch.Tensor(out_features))
         else:
             self.register_parameter('bias_mu', None)
             self.register_parameter('bias_log_sigma', None)
+            self.register_buffer('bias_eps', None)
             
         self.reset_parameters()
 
@@ -52,9 +52,11 @@ class BayesLinear(Module):
         stdv = 1. / math.sqrt(self.weight_mu.size(1))
         self.weight_mu.data.uniform_(-stdv, stdv)
         self.weight_log_sigma.data.fill_(self.prior_log_sigma)
+        self.weight_eps.normal_()
         if self.bias :
             self.bias_mu.data.uniform_(-stdv, stdv)
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
+            self.bias_eps.normal_()
          
         # Initialization method of the original torch nn.linear.
 #         init.kaiming_uniform_(self.weight_mu, a=math.sqrt(5))
@@ -69,12 +71,12 @@ class BayesLinear(Module):
 
     def forward(self, input):
         if not self.freeze :
-            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.weight_eps.normal_()
         weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
         
         if self.bias:
             if not self.freeze :
-                self.bias_eps = torch.randn_like(self.bias_log_sigma)            
+                self.bias_eps.normal_()
             bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             bias = None

@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 from torch.nn.modules.utils import _single, _pair, _triple
 
-"""
+r"""
 Applies Bayesian Convolution
 
 Arguments:
@@ -55,23 +55,26 @@ class _BayesConvNd(Module):
                 in_channels, out_channels // groups, *kernel_size))
             self.weight_log_sigma = Parameter(torch.Tensor(
                 in_channels, out_channels // groups, *kernel_size))
-            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.register_buffer('weight_eps', torch.Tensor(
+                in_channels, out_channels // groups, *kernel_size))
         else:
             self.weight_mu = Parameter(torch.Tensor(
                 out_channels, in_channels // groups, *kernel_size))
             self.weight_log_sigma = Parameter(torch.Tensor(
                 out_channels, in_channels // groups, *kernel_size))
-            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.register_buffer('weight_eps', torch.Tensor(
+                out_channels, in_channels // groups, *kernel_size))
             
         self.bias = bias
         
         if bias:
             self.bias_mu = Parameter(torch.Tensor(out_channels))
             self.bias_log_sigma = Parameter(torch.Tensor(out_channels))
-            self.bias_eps = torch.randn_like(self.bias_log_sigma)
+            self.register_buffer('bias_eps', torch.Tensor(out_channels))
         else:
             self.register_parameter('bias_mu', None)
             self.register_parameter('bias_log_sigma', None)
+            self.register_buffer('bias_eps', None)
             
         self.reset_parameters()
 
@@ -82,10 +85,11 @@ class _BayesConvNd(Module):
         stdv = 1.0 / math.sqrt(n)
         self.weight_mu.data.uniform_(-stdv, stdv)
         self.weight_log_sigma.data.fill_(self.prior_log_sigma)
+        self.weight_eps.normal_()
         if self.bias :
             self.bias_mu.data.uniform_(-stdv, stdv)
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
-            
+            self.bias_eps.normal_()
         # Initialization method of the original torch nn.conv.
 #         init.kaiming_uniform_(self.weight_mu, a=math.sqrt(5))
 #         self.weight_log_sigma.data.fill_(self.prior_log_sigma)
@@ -132,7 +136,7 @@ class BayesConv2d(_BayesConvNd):
         
         if self.bias:
             if not self.freeze :
-                self.bias_eps = torch.randn_like(self.bias_log_sigma)    
+                self.bias_eps.normal_()
             bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             bias = None
@@ -148,7 +152,7 @@ class BayesConv2d(_BayesConvNd):
 
     def forward(self, input):
         if not self.freeze :
-            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.weight_eps.normal_()
         weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
         
         return self.conv2d_forward(input, weight)
