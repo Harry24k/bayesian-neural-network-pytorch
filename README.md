@@ -20,6 +20,10 @@ To help construct bayesian neural network intuitively, all codes are modified ba
 import torchbnn
 ```
 
+### Demos
+* **Bayesian Neural Network with Iris Data** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/White%20Box%20Attack%20with%20Imagenet.ipynb)): 
+To classify Iris data, in this demo, two-layer bayesian neural network is constructed and tested with plots. It shows how bayesian-neural-network works and randomness of the model.
+
 ## Thanks to
 
 * @kumar-shridhar [github:PyTorch-BayesianCNN](https://github.com/kumar-shridhar/PyTorch-BayesianCNN)
@@ -58,7 +62,11 @@ import torchbnn
 * **modules** : For supporting **freeze** method, freeze, weight_eps and bias_eps is added to each modules. If freeze is False (Defalt), weight_eps and bias_eps will be initialized with normal noise at every forward. If freeze is True, weight_eps and bias_eps won't be changed. 
 
 ### Version 0.7
+* **DO NOT USE**
+    
+### Version 0.8
 * **modules** : For supporting **freeze** method, weight_eps and bias_eps is changed to buffer with register_buffer method. Thorugh this change, it provides save and load even if bayesian neural network is freezed.
     * **BayesModule is added** : Bayesian version of torch.nn.Module. Not being used currently.
 * **utils/freeze_model.py** :
     * **freeze, unfreeze methods are modified** : Previous methods didn't work on single layer network.
+* **Demos are uploaded** : "Bayesian Neural Network with Iris Data".
