@@ -21,7 +21,7 @@ import torchbnn
 ```
 
 ### Demos
-* **Bayesian Neural Network with Iris Data** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/White%20Box%20Attack%20with%20Imagenet.ipynb)): 
+* **Bayesian Neural Network with Iris Data** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20with%20Iris%20Data.ipynb)): 
 To classify Iris data, in this demo, two-layer bayesian neural network is constructed and tested with plots. It shows how bayesian-neural-network works and randomness of the model.
 
 ## Thanks to
