@@ -36,15 +36,13 @@ class _BayesBatchNorm(Module):
             self.prior_sigma = prior_sigma
             self.prior_log_sigma = math.log(prior_sigma)
             
-            self.freeze = False
-            
             self.weight_mu = Parameter(torch.Tensor(num_features))
             self.weight_log_sigma = Parameter(torch.Tensor(num_features))
-            self.register_buffer('weight_eps', torch.Tensor(num_features))
+            self.register_buffer('weight_eps', None)
             
             self.bias_mu = Parameter(torch.Tensor(num_features))
             self.bias_log_sigma = Parameter(torch.Tensor(num_features))
-            self.register_buffer('bias_eps', torch.Tensor(num_features))
+            self.register_buffer('bias_eps', None)
         else:
             self.register_parameter('weight_mu', None)
             self.register_parameter('weight_log_sigma', None)
@@ -74,16 +72,25 @@ class _BayesBatchNorm(Module):
             # Initialization method of Adv-BNN.
             self.weight_mu.data.uniform_()
             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
-            self.weight_eps.normal_()
             self.bias_mu.data.zero_()
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
-            self.bias_eps.normal_()
+            
             # Initilization method of the original torch nn.batchnorm.
 #             init.ones_(self.weight_mu)
 #             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
 #             init.zeros_(self.bias_mu)
 #             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
 
+    def freeze(self) :
+        if self.affine :
+            self.weight_eps = torch.randn_like(self.weight_log_sigma)
+            self.bias_eps = torch.randn_like(self.bias_log_sigma)
+        
+    def unfreeze(self) :
+        if self.affine :
+            self.weight_eps = None
+            self.bias_eps = None 
+            
     def _check_input_dim(self, input):
         raise NotImplementedError
 
@@ -104,11 +111,12 @@ class _BayesBatchNorm(Module):
                     exponential_average_factor = self.momentum
 
         if self.affine :
-            if not self.freeze : 
-                self.weight_eps.normal_()
-                self.bias_eps.normal_()
-            weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
-            bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
+            if self.weight_eps is None : 
+                weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.rand_like(self.weight_log_sigma)
+                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.rand_like(self.bias_log_sigma)
+            else : 
+                weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
+                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             weight = None
             bias = None

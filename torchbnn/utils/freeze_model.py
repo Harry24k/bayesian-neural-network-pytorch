@@ -14,12 +14,20 @@ Arguments:
 
 def freeze(module):
     if isinstance(module, bayes_layer) :
-        module.freeze = True
+        module.freeze()
     for submodule in module.children() :
         freeze(submodule)
         
+"""
+Methods for unfreezing bayesian-model.
+
+Arguments:
+    model (nn.Module): a model to be freezed.
+
+"""
+
 def unfreeze(module):
     if isinstance(module, bayes_layer) :
-        module.freeze = False
+        module.unfreeze()
     for submodule in module.children() :
         unfreeze(submodule)

@@ -9,6 +9,7 @@ bayes_layer = [BayesLinear, BayesConv2d, BayesBatchNorm2d]
 
 """
 Methods for the transformation between non-bayesian-layer and bayesian-layer.
+Currently, class based networks only supported.
 
 Arguments:
     layer (nn.Module): a layer to be transformed.
@@ -47,6 +48,7 @@ def _bayes_to_nonbayes(layer):
 
 """
 Methods for the transformation between non-bayesian-model and bayesian-model.
+Currently, class based networks only supported.
 
 Arguments:
     model (nn.Module): a model to be transformed.
