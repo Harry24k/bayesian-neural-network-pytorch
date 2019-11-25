@@ -24,10 +24,10 @@ import torchbnn
 * **Bayesian Neural Network with Iris Data** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20with%20Iris%20Data.ipynb)): 
 To classify Iris data, in this demo, two-layer bayesian neural network is constructed and tested with plots. It shows how bayesian-neural-network works and randomness of the model.
 
-* **Convert to Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20with%20Iris%20Data.ipynb)): 
+* **Convert to Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Convert%20to%20Bayesian%20Neural%20Network.ipynb)): 
 To convert a basic neural network to a bayesian neural network, this demo shows how 'nonbayes_to_bayes' and 'bayes_to_nonbayes' work.
 
-* **Freeze Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20with%20Iris%20Data.ipynb)): 
+* **Freeze Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Freeze%20Bayesian%20Neural%20Network.ipynb)): 
 To freeze a bayesian neural network, which means force a bayesian neural network to output same result for same input, this demo shows the effect of 'freeze' and 'unfreeze'.
 
 ## Thanks to
