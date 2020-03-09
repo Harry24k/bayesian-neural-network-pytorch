@@ -61,9 +61,12 @@ class _BayesConvNd(Module):
                 out_channels, in_channels // groups, *kernel_size))
             self.register_buffer('weight_eps', None)
             
-        self.bias = bias
+        if bias is None or bias is False :
+            self.bias = False
+        else :
+            self.bias = True
         
-        if bias:
+        if self.bias:
             self.bias_mu = Parameter(torch.Tensor(out_channels))
             self.bias_log_sigma = Parameter(torch.Tensor(out_channels))
             self.register_buffer('bias_eps', None)
@@ -129,13 +132,13 @@ class _BayesConvNd(Module):
             self.padding_mode = 'zeros'
     
 class BayesConv2d(_BayesConvNd):
-    def __init__(self, prior_mu, prior_log_sigma, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros'):
+    def __init__(self, prior_mu, prior_sigma, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros'):
         kernel_size = _pair(kernel_size)
         stride = _pair(stride)
         padding = _pair(padding)
         dilation = _pair(dilation)
         super(BayesConv2d, self).__init__(
-            prior_mu, prior_log_sigma, in_channels, out_channels, kernel_size, stride, 
+            prior_mu, prior_sigma, in_channels, out_channels, kernel_size, stride, 
             padding, dilation, False, _pair(0), groups, bias, padding_mode)
 
     def conv2d_forward(self, input, weight):

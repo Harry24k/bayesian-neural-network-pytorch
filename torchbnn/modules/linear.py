@@ -33,8 +33,12 @@ class BayesLinear(Module):
         self.weight_log_sigma = Parameter(torch.Tensor(out_features, in_features))
         self.register_buffer('weight_eps', None)
                 
-        self.bias = bias
-        if bias:
+        if bias is None or bias is False :
+            self.bias = False
+        else :
+            self.bias = True
+            
+        if self.bias:
             self.bias_mu = Parameter(torch.Tensor(out_features))
             self.bias_log_sigma = Parameter(torch.Tensor(out_features))
             self.register_buffer('bias_eps', None)

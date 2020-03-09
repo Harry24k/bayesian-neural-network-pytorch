@@ -84,3 +84,11 @@ To freeze a bayesian neural network, which means force a bayesian neural network
 * **utils/freeze_model.py** :
     * **freeze, unfreeze methods are modified** : These methods in utils are changed due to the above.
 * **Demos are uploaded** : "Convert to Bayesian Neural Network", "Freeze Bayesian Neural Network".
+
+### Version 1.0
+* **modules** : BayesLinear, BayesConv2d are modified.
+    * **BayesLinear** : Bias will set to False if the bias in args is None or Flase. Otherwise, it set to True.
+    * **BayesConv2d** : Bias will set to False if the bias in args is None or Flase. Otherwise, it set to True. In addition, re-defined with prior_sigma instead of prior_log_sigma.
+
+* **utils/convert_model.py** :
+    * Depreciated. Please refer the [modified demo](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Convert%20to%20Bayesian%20Neural%20Network.ipynb).

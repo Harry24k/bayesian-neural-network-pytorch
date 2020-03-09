@@ -10,3 +10,4 @@ MENIFEST.in
 setup.cfg
 setup.py
 .gitattributes
+.*/
