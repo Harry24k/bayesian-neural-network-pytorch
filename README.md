@@ -4,6 +4,8 @@ This is a lightweight repository of bayesian neural network for Pytorch.
 There are bayesian versions of pytorch layers and some utils.
 To help construct bayesian neural network intuitively, all codes are modified based on the original pytorch codes.
 
+** Please use torch v1.2 **
+
 ## Usage
 
 ### Dependencies
@@ -92,3 +94,6 @@ To freeze a bayesian neural network, which means force a bayesian neural network
 
 * **utils/convert_model.py** :
     * Depreciated. Please refer the [modified demo](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Convert%20to%20Bayesian%20Neural%20Network.ipynb).
+
+### Version 1.1
+* **Pip Package Re-uploaded**
