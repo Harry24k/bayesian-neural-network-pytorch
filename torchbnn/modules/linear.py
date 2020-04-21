@@ -5,19 +5,18 @@ from torch.nn import Module, Parameter
 import torch.nn.init as init
 import torch.nn.functional as F
 
-r"""
-Applies Bayesian Linear
-
-Arguments:
-    prior_mu (Float): mean of prior normal distribution.
-    prior_sigma (Float): sigma of prior normal distribution.
-
-.. note:: other arguments are following linear of pytorch 1.2.0.
-https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/linear.py
-
-"""
-
 class BayesLinear(Module):
+    r"""
+    Applies Bayesian Linear
+
+    Arguments:
+        prior_mu (Float): mean of prior normal distribution.
+        prior_sigma (Float): sigma of prior normal distribution.
+
+    .. note:: other arguments are following linear of pytorch 1.2.0.
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/linear.py
+    
+    """
     __constants__ = ['prior_mu', 'prior_sigma', 'bias', 'in_features', 'out_features']
 
     def __init__(self, prior_mu, prior_sigma, in_features, out_features, bias=True):
@@ -80,6 +79,9 @@ class BayesLinear(Module):
             self.bias_eps = None 
             
     def forward(self, input):
+        r"""
+        Overriden.
+        """
         if self.weight_eps is None :
             weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
         else :
@@ -96,4 +98,7 @@ class BayesLinear(Module):
         return F.linear(input, weight, bias)
 
     def extra_repr(self):
+        r"""
+        Overriden.
+        """
         return 'prior_mu={}, prior_sigma={}, in_features={}, out_features={}, bias={}'.format(self.prior_mu, self.prior_sigma, self.in_features, self.out_features, self.bias is not None)

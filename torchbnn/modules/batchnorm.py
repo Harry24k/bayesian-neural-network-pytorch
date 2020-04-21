@@ -5,19 +5,19 @@ from torch.nn import Module, Parameter
 import torch.nn.init as init
 import torch.nn.functional as F
 
-r"""
-Applies Bayesian Batch Normalization over a 2D or 3D input 
-
-Arguments:
-    prior_mu (Float): mean of prior normal distribution.
-    prior_sigma (Float): sigma of prior normal distribution.
-
-.. note:: other arguments are following batchnorm of pytorch 1.2.0.
-https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
-
-"""
-
 class _BayesBatchNorm(Module):
+    r"""
+    Applies Bayesian Batch Normalization over a 2D or 3D input 
+
+    Arguments:
+        prior_mu (Float): mean of prior normal distribution.
+        prior_sigma (Float): sigma of prior normal distribution.
+
+    .. note:: other arguments are following batchnorm of pytorch 1.2.0.
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
+    
+    """
+
     _version = 2
     __constants__ = ['prior_mu', 'prior_sigma', 'track_running_stats', 
                      'momentum', 'eps', 'weight', 'bias',
@@ -145,6 +145,18 @@ class _BayesBatchNorm(Module):
             missing_keys, unexpected_keys, error_msgs)
         
 class BayesBatchNorm2d(_BayesBatchNorm):
+    r"""
+    Applies Bayesian Batch Normalization over a 2D input 
+
+    Arguments:
+        prior_mu (Float): mean of prior normal distribution.
+        prior_sigma (Float): sigma of prior normal distribution.
+
+    .. note:: other arguments are following batchnorm of pytorch 1.2.0.
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
+
+    """
+
     def _check_input_dim(self, input):
         if input.dim() != 4:
             raise ValueError('expected 4D input (got {}D input)'

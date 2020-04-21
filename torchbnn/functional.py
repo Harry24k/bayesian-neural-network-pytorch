@@ -27,7 +27,7 @@ def bayesian_kl_loss(model, reduction='mean', last_layer_only=False) :
         model (nn.Module): a model to be calculated for KL-divergence.
         reduction (string, optional): Specifies the reduction to apply to the output:
             ``'mean'``: the sum of the output will be divided by the number of
-            elements in the output,
+            elements of the output.
             ``'sum'``: the output will be summed.
         last_layer_only (Bool): True for return only the last layer's KL divergence.    
         

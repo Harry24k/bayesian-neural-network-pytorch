@@ -7,20 +7,18 @@ import torch.nn.functional as F
 
 from torch.nn.modules.utils import _single, _pair, _triple
 
-r"""
-Applies Bayesian Convolution
-
-Arguments:
-    prior_mu (Float): mean of prior normal distribution.
-    prior_sigma (Float): sigma of prior normal distribution.
-
-.. note:: other arguments are following conv of pytorch 1.2.0.
-https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/conv.py
-
-"""
 
 class _BayesConvNd(Module):
+    r"""
+    Applies Bayesian Convolution
 
+    Arguments:
+        prior_mu (Float): mean of prior normal distribution.
+        prior_sigma (Float): sigma of prior normal distribution.
+
+    .. note:: other arguments are following conv of pytorch 1.2.0.
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/conv.py
+    """
     __constants__ = ['prior_mu', 'prior_sigma', 'stride', 'padding', 'dilation',
                      'groups', 'bias', 'padding_mode', 'output_padding', 'in_channels',
                      'out_channels', 'kernel_size']
@@ -132,6 +130,17 @@ class _BayesConvNd(Module):
             self.padding_mode = 'zeros'
     
 class BayesConv2d(_BayesConvNd):
+    r"""
+    Applies Bayesian Convolution for 2D inputs
+
+    Arguments:
+        prior_mu (Float): mean of prior normal distribution.
+        prior_sigma (Float): sigma of prior normal distribution.
+
+    .. note:: other arguments are following conv of pytorch 1.2.0.
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/conv.py
+    
+    """
     def __init__(self, prior_mu, prior_sigma, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros'):
         kernel_size = _pair(kernel_size)
         stride = _pair(stride)
@@ -161,6 +170,9 @@ class BayesConv2d(_BayesConvNd):
                         self.padding, self.dilation, self.groups)
 
     def forward(self, input):
+        r"""
+        Overriden.
+        """
         if self.weight_eps is None :
             weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
         else :
