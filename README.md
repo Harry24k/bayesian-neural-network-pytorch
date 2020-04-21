@@ -4,8 +4,6 @@ This is a lightweight repository of bayesian neural network for Pytorch.
 There are bayesian versions of pytorch layers and some utils.
 To help construct bayesian neural network intuitively, all codes are modified based on the original pytorch codes.
 
-** Please use torch v1.2 **
-
 ## Usage
 
 ### Dependencies
