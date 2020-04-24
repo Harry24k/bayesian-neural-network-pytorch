@@ -24,7 +24,7 @@ def unfreeze(module):
     Methods for unfreezing bayesian-model.
 
     Arguments:
-        model (nn.Module): a model to be freezed.
+        model (nn.Module): a model to be unfreezed.
 
     """
     if isinstance(module, bayes_layer) :
