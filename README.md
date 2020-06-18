@@ -97,3 +97,6 @@ To freeze a bayesian neural network, which means force a bayesian neural network
 
 ### Version 1.1
 * **Pip Package Re-uploaded**
+
+### Version 1.2
+* **[Bug fixed](https://github.com/Harry24k/bayesian-neural-network-pytorch/issues/4)** 

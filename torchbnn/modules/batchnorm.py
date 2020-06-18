@@ -112,8 +112,8 @@ class _BayesBatchNorm(Module):
 
         if self.affine :
             if self.weight_eps is None : 
-                weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.rand_like(self.weight_log_sigma)
-                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.rand_like(self.bias_log_sigma)
+                weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
             else : 
                 weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
                 bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
