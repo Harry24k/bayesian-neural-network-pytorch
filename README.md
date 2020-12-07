@@ -28,6 +28,12 @@ import torchbnn
 
 
 
+### :mag_right: Update Records
+
+Here is [update records](Update%20Records.md) of this package.
+
+
+
 ### :rocket: Demos
 
 * **Bayesian Neural Network Regression** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Regression.ipynb)): 
