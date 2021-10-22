@@ -26,7 +26,17 @@ This is a lightweight repository of bayesian neural network for PyTorch.
 import torchbnn
 ```
 
+### Citation
+If you use this package, please cite the following BibTex (SemanticScholar, GoogleScholar):
 
+```
+@article{lee2021graddiv,
+  title={GradDiv: Adversarial Robustness of Randomized Neural Networks via Gradient Diversity Regularization},
+  author={Lee, Sungyoon and Kim, Hoki and Lee, Jaewook},
+  journal={arXiv preprint arXiv:2107.02425},
+  year={2021}
+}
+```
 
 ### :mag_right: Update Records
 
