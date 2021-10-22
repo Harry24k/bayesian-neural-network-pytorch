@@ -26,7 +26,7 @@ This is a lightweight repository of bayesian neural network for PyTorch.
 import torchbnn
 ```
 
-### Citation
+## Citation
 If you use this package, please cite the following BibTex (SemanticScholar, GoogleScholar):
 
 ```
@@ -38,13 +38,13 @@ If you use this package, please cite the following BibTex (SemanticScholar, Goog
 }
 ```
 
-### :mag_right: Update Records
+## :mag_right: Update Records
 
 Here is [update records](Update%20Records.md) of this package.
 
 
 
-### :rocket: Demos
+## :rocket: Demos
 
 * **Bayesian Neural Network Regression** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Regression.ipynb)): 
 In this demo, two-layer bayesian neural network is constructed and trained on simple custom data. It shows how bayesian-neural-network works and randomness of the model.
