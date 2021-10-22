@@ -26,6 +26,20 @@ This is a lightweight repository of bayesian neural network for PyTorch.
 import torchbnn
 ```
 
+
+
+### :rocket: Demos
+
+* **Bayesian Neural Network Regression** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Regression.ipynb)): 
+In this demo, two-layer bayesian neural network is constructed and trained on simple custom data. It shows how bayesian-neural-network works and randomness of the model.
+* **Bayesian Neural Network Classification** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Classification.ipynb)): 
+To classify Iris data, in this demo, two-layer bayesian neural network is constructed and trained on the Iris data. It shows how bayesian-neural-network works and randomness of the model.
+* **Convert to Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Convert%20to%20Bayesian%20Neural%20Network.ipynb)): 
+To convert a basic neural network to a bayesian neural network, this demo shows how `nonbayes_to_bayes` and `bayes_to_nonbayes` work.
+* **Freeze Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Freeze%20Bayesian%20Neural%20Network.ipynb)): 
+To freeze a bayesian neural network, which means force a bayesian neural network to output same result for same input, this demo shows the effect of `freeze` and `unfreeze`.
+
+
 ## Citation
 If you use this package, please cite the following BibTex (SemanticScholar, GoogleScholar):
 
@@ -41,20 +55,6 @@ If you use this package, please cite the following BibTex (SemanticScholar, Goog
 ## :mag_right: Update Records
 
 Here is [update records](Update%20Records.md) of this package.
-
-
-
-## :rocket: Demos
-
-* **Bayesian Neural Network Regression** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Regression.ipynb)): 
-In this demo, two-layer bayesian neural network is constructed and trained on simple custom data. It shows how bayesian-neural-network works and randomness of the model.
-* **Bayesian Neural Network Classification** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Bayesian%20Neural%20Network%20Classification.ipynb)): 
-To classify Iris data, in this demo, two-layer bayesian neural network is constructed and trained on the Iris data. It shows how bayesian-neural-network works and randomness of the model.
-* **Convert to Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Convert%20to%20Bayesian%20Neural%20Network.ipynb)): 
-To convert a basic neural network to a bayesian neural network, this demo shows how `nonbayes_to_bayes` and `bayes_to_nonbayes` work.
-* **Freeze Bayesian Neural Network** ([code](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/master/demos/Freeze%20Bayesian%20Neural%20Network.ipynb)): 
-To freeze a bayesian neural network, which means force a bayesian neural network to output same result for same input, this demo shows the effect of `freeze` and `unfreeze`.
-
 
 
 ## Thanks to
