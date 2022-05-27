@@ -44,11 +44,12 @@ To freeze a bayesian neural network, which means force a bayesian neural network
 If you use this package, please cite the following BibTex (SemanticScholar, GoogleScholar):
 
 ```
-@article{lee2021graddiv,
-  title={GradDiv: Adversarial Robustness of Randomized Neural Networks via Gradient Diversity Regularization},
+@article{lee2022graddiv,
+  title={Graddiv: Adversarial robustness of randomized neural networks via gradient diversity regularization},
   author={Lee, Sungyoon and Kim, Hoki and Lee, Jaewook},
-  journal={arXiv preprint arXiv:2107.02425},
-  year={2021}
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year={2022},
+  publisher={IEEE}
 }
 ```
 
