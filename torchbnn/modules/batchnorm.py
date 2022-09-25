@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 class _BayesBatchNorm(Module):
     r"""
-    Applies Bayesian Batch Normalization over a 2D or 3D input 
+    Applies Bayesian Batch Normalization over a 2D or 3D input
 
     Arguments:
         prior_mu (Float): mean of prior normal distribution.
@@ -15,11 +15,11 @@ class _BayesBatchNorm(Module):
 
     .. note:: other arguments are following batchnorm of pytorch 1.2.0.
     https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/batchnorm.py
-    
+
     """
 
     _version = 2
-    __constants__ = ['prior_mu', 'prior_sigma', 'track_running_stats', 
+    __constants__ = ['prior_mu', 'prior_sigma', 'track_running_stats',
                      'momentum', 'eps', 'weight', 'bias',
                      'running_mean', 'running_var', 'num_batches_tracked',
                      'num_features', 'affine']
@@ -35,11 +35,11 @@ class _BayesBatchNorm(Module):
             self.prior_mu = prior_mu
             self.prior_sigma = prior_sigma
             self.prior_log_sigma = math.log(prior_sigma)
-            
+
             self.weight_mu = Parameter(torch.Tensor(num_features))
             self.weight_log_sigma = Parameter(torch.Tensor(num_features))
             self.register_buffer('weight_eps', None)
-            
+
             self.bias_mu = Parameter(torch.Tensor(num_features))
             self.bias_log_sigma = Parameter(torch.Tensor(num_features))
             self.register_buffer('bias_eps', None)
@@ -64,7 +64,7 @@ class _BayesBatchNorm(Module):
         if self.track_running_stats:
             self.running_mean.zero_()
             self.running_var.fill_(1)
-            self.num_batches_tracked.zero_()           
+            self.num_batches_tracked.zero_()
 
     def reset_parameters(self):
         self.reset_running_stats()
@@ -74,7 +74,7 @@ class _BayesBatchNorm(Module):
             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
             self.bias_mu.data.zero_()
             self.bias_log_sigma.data.fill_(self.prior_log_sigma)
-            
+
             # Initilization method of the original torch nn.batchnorm.
 #             init.ones_(self.weight_mu)
 #             self.weight_log_sigma.data.fill_(self.prior_log_sigma)
@@ -85,12 +85,12 @@ class _BayesBatchNorm(Module):
         if self.affine :
             self.weight_eps = torch.randn_like(self.weight_log_sigma)
             self.bias_eps = torch.randn_like(self.bias_log_sigma)
-        
+
     def unfreeze(self) :
         if self.affine :
             self.weight_eps = None
-            self.bias_eps = None 
-            
+            self.bias_eps = None
+
     def _check_input_dim(self, input):
         raise NotImplementedError
 
@@ -111,16 +111,18 @@ class _BayesBatchNorm(Module):
                     exponential_average_factor = self.momentum
 
         if self.affine :
-            if self.weight_eps is None : 
-                weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
-                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
-            else : 
+            if self.weight_eps is None :
+                # weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+                weight = torch.normal(self.weight_mu, torch.exp(self.weight_log_sigma/2))
+                # bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+                bias = torch.normal(self.bias_mu, torch.exp(self.weight_log_sigma/2))
+            else :
                 weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
                 bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
             weight = None
             bias = None
-        
+
         return F.batch_norm(
             input, self.running_mean, self.running_var, weight, bias,
             self.training or not self.track_running_stats,
@@ -143,10 +145,10 @@ class _BayesBatchNorm(Module):
         super(_BayesBatchNorm, self)._load_from_state_dict(
             state_dict, prefix, local_metadata, strict,
             missing_keys, unexpected_keys, error_msgs)
-        
+
 class BayesBatchNorm2d(_BayesBatchNorm):
     r"""
-    Applies Bayesian Batch Normalization over a 2D input 
+    Applies Bayesian Batch Normalization over a 2D input
 
     Arguments:
         prior_mu (Float): mean of prior normal distribution.

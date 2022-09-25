@@ -167,7 +167,8 @@ class BayesConv2d(_BayesConvNd):
 
         if self.bias:
             if self.bias_eps is None :
-                bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+                # bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+                bias = torch.normal(self.bias_mu, torch.exp(self.bias_log_sigma/2))
             else :
                 bias = self.bias_mu + torch.exp(self.bias_log_sigma) * self.bias_eps
         else :
@@ -187,7 +188,8 @@ class BayesConv2d(_BayesConvNd):
         Overriden.
         """
         if self.weight_eps is None :
-            weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+            # weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+            weight = torch.normal(self.weight_mu, torch.exp(self.weight_log_sigma/2))
         else :
             weight = self.weight_mu + torch.exp(self.weight_log_sigma) * self.weight_eps
 
@@ -214,7 +216,9 @@ class BayesConvTranspose2d(_BayesConvTransposeNd):
         num_spatial_dims = 2
         output_padding = self._output_padding(input, self.stride, self.padding, self.kernel_size, num_spatial_dims, self.dilation)
 
-        weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
-        bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+        # weight = self.weight_mu + torch.exp(self.weight_log_sigma) * torch.randn_like(self.weight_log_sigma)
+        # bias = self.bias_mu + torch.exp(self.bias_log_sigma) * torch.randn_like(self.bias_log_sigma)
+        weight = torch.normal(self.weight_mu, torch.exp(self.weight_log_sigma/2))
+        bias = torch.normal(self.bias_mu, torch.exp(self.bias_log_sigma/2))
 
-        return F.conv_transpose2d(input, self.weight, self.bias, self.stride, self.padding, output_padding, self.groups, self.dilation)
+        return F.conv_transpose2d(input, weight, bias, self.stride, self.padding, output_padding, self.groups, self.dilation)
